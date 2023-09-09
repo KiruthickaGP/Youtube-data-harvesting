@@ -48,149 +48,111 @@ youtube=build("youtube","v3",developerKey=api_key)
 
 
 # FUNCTION TO GET CHANNEL DETAILS
-def get_channel_details(youtube, channel_id):
+def get_channel_details(channel_id):
     ch_data = []
-    response = youtube.channels().list(part='snippet,contentDetails,statistics',
-                                       id=channel_id).execute()
+    response = youtube.channels().list(part = 'snippet,contentDetails,statistics',
+                                     id= channel_id).execute()
 
     for i in range(len(response['items'])):
-        data = dict(Channel_id=channel_id,  # Assuming channel_id is a single ID
-                    Channel_name=response['items'][i]['snippet']['title'],
-                    Playlist_id=response['items'][i]['contentDetails']['relatedPlaylists']['uploads'],
-                    Subscribers=response['items'][i]['statistics']['subscriberCount'],
-                    Views=response['items'][i]['statistics']['viewCount'],
-                    Total_videos=response['items'][i]['statistics']['videoCount'],
-                    Description=response['items'][i]['snippet']['description'],
-                    Country=response['items'][i]['snippet'].get('country')
+        data = dict(Channel_id = channel_id[i],
+                    Channel_name = response['items'][i]['snippet']['title'],
+                    Playlist_id = response['items'][i]['contentDetails']['relatedPlaylists']['uploads'],
+                    Subscribers = response['items'][i]['statistics']['subscriberCount'],
+                    Views = response['items'][i]['statistics']['viewCount'],
+                    Total_videos = response['items'][i]['statistics']['videoCount'],
+                    Description = response['items'][i]['snippet']['description'],
+                    Country = response['items'][i]['snippet'].get('country')
                     )
         ch_data.append(data)
     return ch_data
 
 
 # FUNCTION TO GET VIDEO IDS
-def get_channel_videos(youtube, channel_id):
+def get_channel_videos(channel_id):
     video_ids = []
     # get Uploads playlist id
-    res = youtube.channels().list(id=channel_id, part='contentDetails').execute()
+    res = youtube.channels().list(id=channel_id, 
+                                  part='contentDetails').execute()
     playlist_id = res['items'][0]['contentDetails']['relatedPlaylists']['uploads']
     next_page_token = None
-
+    
     while True:
-        res = youtube.playlistItems().list(playlistId=playlist_id,
-                                           part='snippet',
+        res = youtube.playlistItems().list(playlistId=playlist_id, 
+                                           part='snippet', 
                                            maxResults=50,
                                            pageToken=next_page_token).execute()
-
+        
         for i in range(len(res['items'])):
             video_ids.append(res['items'][i]['snippet']['resourceId']['videoId'])
         next_page_token = res.get('nextPageToken')
-
+        
         if next_page_token is None:
             break
     return video_ids
 
 
 # FUNCTION TO GET VIDEO DETAILS
-def get_video_details(youtube, v_ids):
+def get_video_details(v_ids):
     video_stats = []
-
+    
     for i in range(0, len(v_ids), 50):
         response = youtube.videos().list(
-            part="snippet,contentDetails,statistics",
-            id=','.join(v_ids[i:i + 50])).execute()
+                    part="snippet,contentDetails,statistics",
+                    id=','.join(v_ids[i:i+50])).execute()
         for video in response['items']:
-            video_details = dict(Channel_name=video['snippet']['channelTitle'],
-                                 Channel_id=video['snippet']['channelId'],
-                                 Video_id=video['id'],
-                                 Title=video['snippet']['title'],
-                                 Thumbnail=video['snippet']['thumbnails']['default']['url'],
-                                 Description=video['snippet']['description'],
-                                 Published_date=video['snippet']['publishedAt'],
-                                 Duration=video['contentDetails']['duration'],
-                                 Views=video['statistics']['viewCount'],
-                                 Likes=video['statistics'].get('likeCount'),
-                                 Comments=video['statistics'].get('commentCount'),
-                                 Favorite_count=video['statistics']['favoriteCount'],
-                                 Definition=video['contentDetails']['definition'],
-                                 Caption_status=video['contentDetails']['caption']
-                                 )
+            video_details = dict(Channel_name = video['snippet']['channelTitle'],
+                                Channel_id = video['snippet']['channelId'],
+                                Video_id = video['id'],
+                                Title = video['snippet']['title'],
+                                Thumbnail = video['snippet']['thumbnails']['default']['url'],
+                                Description = video['snippet']['description'],
+                                Published_date = video['snippet']['publishedAt'],
+                                Duration = video['contentDetails']['duration'],
+                                Views = video['statistics']['viewCount'],
+                                Likes = video['statistics'].get('likeCount'),
+                                Comments = video['statistics'].get('commentCount'),
+                                Favorite_count = video['statistics']['favoriteCount'],
+                                Definition = video['contentDetails']['definition'],
+                                Caption_status = video['contentDetails']['caption']
+                               )
             video_stats.append(video_details)
     return video_stats
 
 
-#FUNCTION TO GET PLAYLIST DETAILS
-def playlist_details(youtube, channel_id):
-    all_playlist_data = []
-
-    for channel_id in channel_id:
-        request = youtube.playlists().list(
-            part='snippet',
-            channelId=channel_id,
-            maxResults=50  # You can adjust this value as needed
-        )
-        response = request.execute()
-
-        for playlist in response.get('items', []):
-            playlist_data = {
-                'channel_id': channel_id,
-                'playlist_id': playlist['id'],
-                'playlist_title': playlist['snippet']['title'],
-                'playlist_description': playlist['snippet']['description']
-            }
-
-            # Call the playlistItems API to get the total number of videos in the playlist
-            playlist_items_request = youtube.playlistItems().list(
-                part='snippet',
-                playlistId=playlist['id'],
-                maxResults=1  # We only need one video to get the total count
-            )
-            playlist_items_response = playlist_items_request.execute()
-            total_videos = playlist_items_response['pageInfo']['totalResults']
-
-            # Add the total_videos count to the playlist_data dictionary
-            playlist_data['total_videos'] = total_videos
-
-            all_playlist_data.append(playlist_data)
-
-    return all_playlist_data
-
 # FUNCTION TO GET COMMENT DETAILS
-def get_comments_details(youtube, v_id):
+def get_comments_details(v_id):
     comment_data = []
     try:
         next_page_token = None
         while True:
             response = youtube.commentThreads().list(part="snippet,replies",
-                                                     videoId=v_id,
-                                                     maxResults=100,
-                                                     pageToken=next_page_token).execute()
+                                                    videoId=v_id,
+                                                    maxResults=100,
+                                                    pageToken=next_page_token).execute()
             for cmt in response['items']:
-                data = dict(Comment_id=cmt['id'],
-                            Video_id=cmt['snippet']['videoId'],
-                            Comment_text=cmt['snippet']['topLevelComment']['snippet']['textDisplay'],
-                            Comment_author=cmt['snippet']['topLevelComment']['snippet']['authorDisplayName'],
-                            Comment_posted_date=cmt['snippet']['topLevelComment']['snippet']['publishedAt'],
-                            Like_count=cmt['snippet']['topLevelComment']['snippet']['likeCount'],
-                            Reply_count=cmt['snippet']['totalReplyCount']
-                            )
+                data = dict(Comment_id = cmt['id'],
+                            Video_id = cmt['snippet']['videoId'],
+                            Comment_text = cmt['snippet']['topLevelComment']['snippet']['textDisplay'],
+                            Comment_author = cmt['snippet']['topLevelComment']['snippet']['authorDisplayName'],
+                            Comment_posted_date = cmt['snippet']['topLevelComment']['snippet']['publishedAt'],
+                            Like_count = cmt['snippet']['topLevelComment']['snippet']['likeCount'],
+                            Reply_count = cmt['snippet']['totalReplyCount']
+                           )
                 comment_data.append(data)
             next_page_token = response.get('nextPageToken')
             if next_page_token is None:
                 break
-    except Exception as e:
-        print(f"An error occurred: {str(e)}")
+    except:
+        pass
     return comment_data
+
 
 # FUNCTION TO GET CHANNEL NAMES FROM MONGODB
 def channel_names():   
     ch_name = []
-    try:
-        for i in db.channel_details.find():
-            ch_name.append(i['Channel_name'])
-    except Exception as e:
-        print(f"An error occurred: {e}")    
+    for i in db.channel_details.find():
+        ch_name.append(i['Channel_name'])
     return ch_name
-
 
 
 # HOME PAGE
@@ -209,7 +171,7 @@ if selected == "Home":
     
 # EXTRACT and TRANSFORM PAGE
 if selected == "Extract and Transform":
-    tab1, tab2 = st.columns(2)
+    tab1,tab2 = st.tabs(["$\huge EXTRACT $", "$\huge TRANSFORM $"])
     
     # EXTRACT TAB
     with tab1:
@@ -224,34 +186,30 @@ if selected == "Extract and Transform":
 
         if st.button("Upload to MongoDB"):
             with st.spinner('Please Wait for it...'):
-                channel_details = get_channel_details(ch_id)
-                video_ids = get_channel_videos(ch_id)
-                video_details = get_video_details(video_ids)  # Corrected variable name to 'video_ids'
-                playlist_details = get_playlist_details(ch_id)  # Assuming you have defined this function
+                ch_details = get_channel_details(ch_id)
+                v_ids = get_channel_videos(ch_id)
+                vid_details = get_video_details(v_ids)
                 
                 def comments():
                     com_d = []
-                    for i in video_ids:
-                        com_d += get_comments_details(i)
+                    for i in v_ids:
+                        com_d+= get_comments_details(i)
                     return com_d
                 comm_details = comments()
 
                 collections1 = db.channel_details
-                collections1.insert_many(channel_details)
+                collections1.insert_many(ch_details)
 
                 collections2 = db.video_details
-                collections2.insert_many(video_details)
+                collections2.insert_many(vid_details)
 
                 collections3 = db.comments_details
                 collections3.insert_many(comm_details)
-            
-                collections4 = db.playlist_details
-                collections4.insert_many(playlist_details)
-            
                 st.success("Upload to MongoDB successful !!")
-
-        with tab2:   
-            st.markdown("#   ")
+      
+    # TRANSFORM TAB
+    with tab2:     
+        st.markdown("#   ")
         st.markdown("### Select a channel to begin Transformation to SQL")
         
         ch_names = channel_names()
@@ -264,16 +222,7 @@ if selected == "Extract and Transform":
                 for i in collections.find({"Channel_name" : user_inp},{'_id':0}):
                     mycursor.execute(query,tuple(i.values()))
                     mydb.commit()
-
-        def insert_into_playlists():
-                collections = db.channel_details
-                query = """INSERT INTO playlists VALUES(%s,%s,%s,%s,%s)"""
                 
-                for i in collections.find({"Channel_name" : user_inp},{'_id':0}):
-                    mycursor.execute(query,tuple(i.values()))
-                    mydb.commit()
-
-
         def insert_into_videos():
             collectionss = db.video_details
             query1 = """INSERT INTO videos VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
@@ -300,7 +249,6 @@ if selected == "Extract and Transform":
             try:
                 
                 insert_into_channels()
-                insert_into_playlists()
                 insert_into_videos()
                 insert_into_comments()
                 st.success("Transformation to MySQL Successful!!!")
@@ -308,7 +256,6 @@ if selected == "Extract and Transform":
                 print(e)
                 st.error("Channel details already transformed!!")
                 traceback.print_exc()
- 
 # VIEW PAGE
 if selected == "View":
     
