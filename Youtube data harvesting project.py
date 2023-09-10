@@ -24,9 +24,9 @@ with st.sidebar:
                            icons=["house-door-fill","tools","card-text"],
                            default_index=0,
                            orientation="vertical",
-                           styles={"nav-link": {"font-size": "30px", "text-align": "centre", "margin": "0px", 
+                           styles={"nav-link": {"font-size": "20px", "text-align": "centre", "margin": "0px", 
                                                 "--hover-color": "#C80101"},
-                                   "icon": {"font-size": "30px"},
+                                   "icon": {"font-size": "20px"},
                                    "container" : {"max-width": "6000px"},
                                    "nav-link-selected": {"background-color": "#C80101"}})
 
