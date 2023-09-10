@@ -1,0 +1,21 @@
+**1.import pandas as pd:** This imports the Pandas library and gives it an alias 'pd'. Pandas is a powerful library for data manipulation and analysis, often used for working with structured data in the form of dataframes.
+
+**2.import plotly.express as px:** This imports the Plotly Express library and gives it an alias 'px'. Plotly Express is a Python graphing library that simplifies the process of creating interactive visualizations.
+
+**3.import streamlit as st:** This imports the Streamlit library and gives it an alias 'st'. Streamlit is a popular library for creating web applications with minimal code, often used for building data dashboards and interactive web apps.
+
+**4.from streamlit_option_menu import option_menu:** This imports a specific function called 'option_menu' from the 'streamlit_option_menu' module. This function is likely used to create dropdown menus or select options within a Streamlit app.
+
+**5.import mysql.connector as sql:** This imports the 'mysql.connector' library and gives it an alias 'sql'. This library is used to connect to and interact with MySQL databases from Python code.
+
+**6.import pymongo:** This imports the 'pymongo' library, which is a Python driver for MongoDB. MongoDB is a NoSQL database, and 'pymongo' allows you to interact with MongoDB databases from Python.
+
+**7.from googleapiclient.discovery import build:** This imports the 'build' function from the 'googleapiclient.discovery' module. This is typically used when working with Google APIs, such as the Google Sheets API or Google Drive API, to create a service object for making API requests.
+
+**8.from PIL import Image:** This imports the 'Image' module from the 'PIL' (Python Imaging Library) library. PIL is often used for working with images in Python, including tasks like opening, manipulating, and saving images.
+
+**9.import traceback:** This imports the 'traceback' module, which provides methods for working with Python traceback information. It's often used for debugging and error handling to display stack traces when exceptions occur.
+
+
+
+
