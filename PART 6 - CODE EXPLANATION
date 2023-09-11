@@ -1,0 +1,123 @@
+CODE
+
+# EXTRACT and TRANSFORM PAGE
+if selected == "Extract and Transform":
+    tab1,tab2 = st.tabs(["$\huge EXTRACT $", "$\huge TRANSFORM $"])
+    
+    # EXTRACT TAB
+    with tab1:
+        st.markdown("#    ")
+        st.write("### Enter YouTube Channel_ID below :")
+        ch_id = st.text_input("Hint : Goto channel's home page > Right click > View page source > Find channel_id").split(',')
+
+        if ch_id and st.button("Extract Data"):
+            ch_details = get_channel_details(ch_id)
+            st.write(f'#### Extracted data from :green["{ch_details[0]["Channel_name"]}"] channel')
+            st.table(ch_details)
+
+        if st.button("Upload to MongoDB"):
+            with st.spinner('Please Wait for it...'):
+                ch_details = get_channel_details(ch_id)
+                v_ids = get_channel_videos(ch_id)
+                vid_details = get_video_details(v_ids)
+                
+                def comments():
+                    com_d = []
+                    for i in v_ids:
+                        com_d+= get_comments_details(i)
+                    return com_d
+                comm_details = comments()
+
+                collections1 = db.channel_details
+                collections1.insert_many(ch_details)
+
+                collections2 = db.video_details
+                collections2.insert_many(vid_details)
+
+                collections3 = db.comments_details
+                collections3.insert_many(comm_details)
+                st.success("Upload to MongoDB successful !!")
+      
+    # TRANSFORM TAB
+    with tab2:     
+        st.markdown("#   ")
+        st.markdown("### Select a channel to begin Transformation to SQL")
+        
+        ch_names = channel_names()
+        user_inp = st.selectbox("Select channel",options= ch_names)
+        
+        def insert_into_channels():
+                collections = db.channel_details
+                query = """INSERT INTO channels VALUES(%s,%s,%s,%s,%s,%s,%s,%s)"""
+                
+                for i in collections.find({"Channel_name" : user_inp},{'_id':0}):
+                    mycursor.execute(query,tuple(i.values()))
+                    mydb.commit()
+                
+        def insert_into_videos():
+            collectionss = db.video_details
+            query1 = """INSERT INTO videos VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+
+            for i in collectionss.find({"Channel_name" : user_inp},{"_id":0}):
+                if 'Tags' in i:  
+                   del i['Tags']
+                t=tuple(i.values())
+                mycursor.execute(query1,t)
+                mydb.commit()
+
+        def insert_into_comments():
+            collections1 = db.video_details
+            collections2 = db.comments_details
+            query2 = """INSERT INTO comments VALUES(%s,%s,%s,%s,%s,%s,%s)"""
+
+            for vid in collections1.find({"Channel_name" : user_inp},{'_id' : 0}):
+                for i in collections2.find({'Video_id': vid['Video_id']},{'_id' : 0}):
+                    t=tuple(i.values())
+                    mycursor.execute(query2,t)
+                    mydb.commit()
+
+        if st.button("Submit"):
+            try:
+                
+                insert_into_channels()
+                insert_into_videos()
+                insert_into_comments()
+                st.success("Transformation to MySQL Successful!!!")
+            except Exception as e:
+                print(e)
+                st.error("Channel details already transformed!!")
+                traceback.print_exc()
+
+
+CODE EXPLANATION 
+
+1.EXTRACT TAB:
+Tab Selection:
+
+create two tabs, "EXTRACT" and "TRANSFORM," using st.tabs(). The user can switch between these tabs to perform different tasks.
+
+2.EXTRACT Tab Content:
+
+In the "EXTRACT" tab (selected by default when the page is loaded), you have the following content:
+A title with a couple of empty markdown lines.
+A text input field where the user can enter YouTube channel IDs. You provide a hint on how to find the channel ID.
+A button labeled "Extract Data" to initiate the extraction process.
+If channel IDs are entered and the "Extract Data" button is clicked, the code calls the get_channel_details() function to retrieve channel details and displays them in a table.
+Another button labeled "Upload to MongoDB" allows the user to upload channel details, video details, and comments to a MongoDB database. The data is extracted and transformed using various functions (get_channel_details(), get_channel_videos(), get_video_details(), and get_comments_details()).
+A success message is displayed when the data is successfully uploaded to MongoDB.
+
+3.TRANSFORM TAB:
+TRANSFORM Tab Content:
+
+In the "TRANSFORM" tab, you provide the following content:
+A title with a couple of empty markdown lines.
+A select box that allows the user to choose a YouTube channel for transformation to SQL.
+Three functions (insert_into_channels(), insert_into_videos(), and insert_into_comments()) are defined to insert data into MySQL tables.
+When the user clicks the "Submit" button, the selected channel's data is transformed and inserted into MySQL tables: "channels," "videos," and "comments."
+A success message is displayed when the transformation and insertion process is completed successfully. If an error occurs, it is caught and displayed as an error message.
+Overall, this code provides the user with the ability to extract data from YouTube channels, store it in MongoDB, and then transform and insert it into MySQL tables on the "Extract and Transform" page of your Streamlit app. Users can switch between the "EXTRACT" and "TRANSFORM" tabs to perform these operations.
+
+
+
+
+
