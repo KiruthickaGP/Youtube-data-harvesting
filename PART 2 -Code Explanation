@@ -1,0 +1,85 @@
+CODE
+
+
+
+# Open the image file for the page icon
+icon = Image.open("C:\\Users\\Kiruthicka\\Downloads\\Youtube.logo.JPG.jpg")
+
+# Set page configurations with background color
+st.set_page_config(
+    page_title="Youtube Data Harvesting and Warehousing | By Kiruthicka",
+    page_icon=icon,
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={'About': """# This app is created by *Kiruthicka!*"""}
+)
+
+# Add background color using CSS
+background_color = """
+<style>
+    body {
+        background-color: #F7EBED;  /* Set background color to #F7EBED*/
+    }
+    .stApp {
+        background-color: #F7EBED; /* Set background-color for the entire app */
+    }
+</style>
+"""
+st.markdown(background_color, unsafe_allow_html=True)
+
+st.snow()
+
+# CREATING OPTION MENU
+with st.sidebar:
+    selected = option_menu(
+        None, ["Home", "Extract and Transform", "View"],
+        icons=["house-door-fill", "tools", "card-text"],
+        default_index=0,
+        orientation="Horizontal",
+        styles={
+            "nav-link": {
+                "font-size": "30px",
+                "font-family": "Fira Sans",
+                "font-weight": "Bold",
+                "text-align": "center",
+                "margin": "30px",
+                "--hover-color": "#C1ADAE"
+            },
+            "icon": {"font-size": "30px"},
+            "container": {"max-width": "6000px"},
+            "nav-link-selected": {
+                "background-color": "#c3909b",
+                "color": "white",
+            }
+        }
+    )
+
+
+CODE EXPLANATION 
+
+
+
+1.Opening an Image File: 
+
+You start by opening an image file (presumably a logo) using the Image.open() function from the PIL (Python Imaging Library) module. This image will be used as the page icon.
+
+2.Setting Page Configuration:  The st.set_page_config() function to configure the settings of your Streamlit web app. 
+
+3.Each parameter explanation :
+page_title: Sets the title of the web page.
+page_icon: Sets the page icon using the image you opened earlier.
+layout: Configures the layout of the app. In this case, it's set to "wide," which likely means a wide layout.
+initial_sidebar_state: Specifies the initial state of the sidebar. It's set to "expanded," meaning the sidebar is initially expanded.
+menu_items: Defines a menu item named "About" with some description text.
+Adding Background Color with CSS: You define a CSS style block to set the background color of the web page and the entire app to a light pinkish color (#F7EBED). You use the st.markdown() function to apply this CSS to your app.
+Adding Snow Effect: It seems you are adding a snow effect to your web app using st.snow(). This will create a visual snowfall effect on the page.
+
+4.Creating an Option Menu in the Sidebar:
+You use st.sidebar to add content to the sidebar. Inside the sidebar, you create an option menu using option_menu():
+
+5.selected: This variable will hold the selected option from the menu.
+["Home", "Extract and Transform", "View"]: These are the menu options.
+icons: You provide icons for each menu option.
+default_index: Specifies the default selected option (in this case, "Home").
+orientation: Sets the orientation of the menu items to horizontal.
+styles: You define various CSS styles for the menu items, including font size, font family, and background color for the selected item.
