@@ -10,25 +10,61 @@ from PIL import Image
 import traceback
 
 
-# SETTING PAGE CONFIGURATIONS
+# Open the image file for the page icon
 icon = Image.open("C:\\Users\\Kiruthicka\\Downloads\\Youtube.logo.JPG.jpg")
-st.set_page_config(page_title= "Youtube Data Harvesting and Warehousing | By Kiruthicka",
-                   page_icon= icon,
-                   layout= "wide",
-                   initial_sidebar_state= "expanded",
-                   menu_items={'About': """# This app is created by *Kiruthicka!*"""})
+
+# Set page configurations with background color
+st.set_page_config(
+    page_title="Youtube Data Harvesting and Warehousing | By Kiruthicka",
+    page_icon=icon,
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={'About': """# This app is created by *Kiruthicka!*"""}
+)
+
+# Add background color using CSS
+background_color = """
+<style>
+    body {
+        background-color: #F7EBED;  /* Set background color to #F7EBED*/
+    }
+    .stApp {
+        background-color: #F7EBED; /* Set background-color for the entire app */
+    }
+</style>
+"""
+st.markdown(background_color, unsafe_allow_html=True)
+
+st.snow()
 
 # CREATING OPTION MENU
 with st.sidebar:
-    selected = option_menu(None, ["Home","Extract and Transform","View"], 
-                           icons=["house-door-fill","tools","card-text"],
-                           default_index=0,
-                           orientation="vertical",
-                           styles={"nav-link": {"font-size": "20px", "text-align": "centre", "margin": "0px", 
-                                                "--hover-color": "#C80101"},
-                                   "icon": {"font-size": "20px"},
-                                   "container" : {"max-width": "6000px"},
-                                   "nav-link-selected": {"background-color": "#C80101"}})
+    selected = option_menu(
+        None, ["Home", "Extract and Transform", "View"],
+        icons=["house-door-fill", "tools", "card-text"],
+        default_index=0,
+        orientation="Horizontal",
+        styles={
+            "nav-link": {
+                "font-size": "30px",
+                "font-family": "Fira Sans",
+                "font-weight": "Bold",
+                "text-align": "center",
+                "margin": "30px",
+                "--hover-color": "#C1ADAE"
+            },
+            "icon": {"font-size": "30px"},
+            "container": {"max-width": "6000px"},
+            "nav-link-selected": {
+                "background-color": "#c3909b",
+                "color": "white",
+            }
+        }
+    )
+
+# Your Streamlit app content here
+
+
 
 # Bridging a connection with MongoDB Atlas and Creating a new database(youtube_data)
 client = pymongo.MongoClient("mongodb+srv://KiruthickaGP:kimoni1710@cluster0.viz8syh.mongodb.net/?retryWrites=true&w=majority")
@@ -156,17 +192,35 @@ def channel_names():
 
 
 # HOME PAGE
+
+
+# Open the image file for the YouTube logo
+logo = Image.open("C:\\Users\\Kiruthicka\\Downloads\\Youtube.logo.JPG.jpg")
+
+# Define a custom CSS style to change text color
+custom_style = """
+<style>
+    .black-text {
+        color: black; /* Change text color to black */
+    }
+</style>
+"""
+
+# Apply the custom style
+st.markdown(custom_style, unsafe_allow_html=True)
+
+
+
+# HOME PAGE
 if selected == "Home":
     # Title Image
-    
-    col1,col2 = st.columns(2,gap= 'medium')
-    col1.markdown("## :blue[Domain] : Social Media")
-    col1.markdown("## :blue[Technologies used] : Python,MongoDB, Youtube Data API, MySql, Streamlit")
-    col1.markdown("## :blue[Overview] : Retrieving the Youtube channels data from the Google API, storing it in a MongoDB as data lake, migrating and transforming data into a SQL database,then querying the data and displaying it in the Streamlit app.")
-    col2.markdown("#   ")
-    col2.markdown("#   ")
-    col2.markdown("#   ")
-    col2.image("C:\\Users\\Kiruthicka\\Downloads\\Youtube.logo.JPG.jpg")
+    col1, col2 = st.columns([3, 1])  # Adjust column widths as needed
+    col1.markdown("<h2 class='black-text'>Domain: Social Media</h2>", unsafe_allow_html=True)
+    col1.markdown("<h2 class='black-text'>Technologies used: Python, MongoDB, Youtube Data API, MySql, Streamlit</h2>", unsafe_allow_html=True)
+    col1.markdown("<h2 class='black-text'>Overview: Retrieving the Youtube channels data from the Google API, storing it in a MongoDB as data lake, migrating and transforming data into a SQL database, then querying the data and displaying it in the Streamlit app.</h2>", unsafe_allow_html=True)
+    col2.image(logo,  use_column_width=True)
+
+ 
     
     
 # EXTRACT and TRANSFORM PAGE
