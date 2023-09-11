@@ -1,0 +1,58 @@
+CODE 
+
+# HOME PAGE
+# Open the image file for the YouTube logo
+logo = Image.open("C:\\Users\\Kiruthicka\\Downloads\\Youtube.logo.JPG.jpg")
+
+# Define a custom CSS style to change text color
+custom_style = """
+<style>
+    .black-text {
+        color: black; /* Change text color to black */
+    }
+</style>
+"""
+
+# Apply the custom style
+st.markdown(custom_style, unsafe_allow_html=True)
+
+
+# HOME PAGE
+if selected == "Home":
+    # Title Image
+    col1, col2 = st.columns([3, 1])  # Adjust column widths as needed
+    col1.markdown("<h2 class='black-text'>Domain: Social Media</h2>", unsafe_allow_html=True)
+    col1.markdown("<h2 class='black-text'>Technologies used: Python, MongoDB, Youtube Data API, MySql, Streamlit</h2>", unsafe_allow_html=True)
+    col1.markdown("<h2 class='black-text'>Overview: Retrieving the Youtube channels data from the Google API, storing it in a MongoDB as data lake, migrating and transforming data into a SQL database, then querying the data and displaying it in the Streamlit app.</h2>", unsafe_allow_html=True)
+    col2.image(logo,  use_column_width=True)
+
+
+
+CODE EXPLANATION 
+
+1.Opening the YouTube Logo Image:
+
+open an image file, presumably containing the YouTube logo, using the Image.open() function. This image will be displayed on the "Home" page.
+
+2.Defining a Custom CSS Style:
+
+Define a custom CSS style called custom_style using HTML <style> tags. This style is used to change the text color to black for specific elements.
+
+3.Applying the Custom Style:
+
+Apply the custom CSS style using the st.markdown() function with the unsafe_allow_html=True parameter. This allows you to inject the custom style into your Streamlit app.
+
+4.Creating the "Home" Page:
+
+check the value of the selected variable to determine if the "Home" page is selected in the sidebar menu.
+If "Home" is selected, you define the content for the "Home" page using Streamlit columns (st.columns()).
+In the left column (col1), you display information about the project's domain, technologies used, and an overview of the project.
+You use HTML <h2> tags with a custom CSS class (black-text) to style the text with black color.
+In the right column (col2), you display the YouTube logo image using col2.image().
+This code sets up the "Home" page of the Streamlit app, providing information about the project, its domain, technologies used, and an image of the YouTube logo. Users can access this page by selecting "Home" from the sidebar menu.
+
+
+
+
+
+
