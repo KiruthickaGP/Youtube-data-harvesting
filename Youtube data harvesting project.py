@@ -1,4 +1,6 @@
 #importing the necessary libraries
+#PART 1
+
 import pandas as pd
 import plotly.express as px
 import streamlit as st
@@ -9,6 +11,7 @@ from googleapiclient.discovery import build
 from PIL import Image
 import traceback
 
+#PART 2
 
 # Open the image file for the page icon
 icon = Image.open("C:\\Users\\Kiruthicka\\Downloads\\Youtube.logo.JPG.jpg")
@@ -62,10 +65,10 @@ with st.sidebar:
         }
     )
 
-# Your Streamlit app content here
 
 
 
+#PART 3
 # Bridging a connection with MongoDB Atlas and Creating a new database(youtube_data)
 client = pymongo.MongoClient("mongodb+srv://KiruthickaGP:kimoni1710@cluster0.viz8syh.mongodb.net/?retryWrites=true&w=majority")
 db = client['youtube_data']
@@ -82,7 +85,7 @@ mycursor = mydb.cursor(buffered=True)
 api_key="AIzaSyBgfFjCMQ0xE0f2gjVxKczKnrJp202faCU"
 youtube=build("youtube","v3",developerKey=api_key)
 
-
+#PART 4 
 # FUNCTION TO GET CHANNEL DETAILS
 def get_channel_details(channel_id):
     ch_data = []
@@ -190,10 +193,9 @@ def channel_names():
         ch_name.append(i['Channel_name'])
     return ch_name
 
+#PART 5
 
 # HOME PAGE
-
-
 # Open the image file for the YouTube logo
 logo = Image.open("C:\\Users\\Kiruthicka\\Downloads\\Youtube.logo.JPG.jpg")
 
@@ -222,7 +224,7 @@ if selected == "Home":
 
  
     
-    
+#PART 6    
 # EXTRACT and TRANSFORM PAGE
 if selected == "Extract and Transform":
     tab1,tab2 = st.tabs(["$\huge EXTRACT $", "$\huge TRANSFORM $"])
@@ -310,6 +312,8 @@ if selected == "Extract and Transform":
                 print(e)
                 st.error("Channel details already transformed!!")
                 traceback.print_exc()
+
+#PART 7                 
 # VIEW PAGE
 if selected == "View":
     
