@@ -1,0 +1,57 @@
+CODE 
+
+
+# Bridging a connection with MongoDB Atlas and Creating a new database(youtube_data)
+client = pymongo.MongoClient("mongodb+srv://KiruthickaGP:kimoni1710@cluster0.viz8syh.mongodb.net/?retryWrites=true&w=majority")
+db = client['youtube_data']
+
+# CONNECTING WITH MYSQL DATABASE
+mydb = sql.connect(host="localhost",
+                   user="root",
+                   password="Kimoni1710@?",
+                   database= "youtube_db"
+                  )
+mycursor = mydb.cursor(buffered=True)
+
+# BUILDING CONNECTION WITH YOUTUBE API
+api_key="AIzaSyBgfFjCMQ0xE0f2gjVxKczKnrJp202faCU"
+youtube=build("youtube","v3",developerKey=api_key)
+
+
+
+
+
+
+CODE EXPLANATION 
+
+1.Establishing connections to different databases and APIs, including MongoDB Atlas, MySQL, and the YouTube Data API. 
+
+Here's an explanation 
+
+2.MongoDB Atlas Connection: You are using the pymongo library to create a connection to a MongoDB Atlas cluster. You provide the connection string in the pymongo.MongoClient() constructor. The connection string contains information about the MongoDB Atlas cluster, including the username and password.
+client: This variable holds the MongoDB client, which you can use to interact with the MongoDB Atlas cluster.
+db: You select a database named 'youtube_data' from the MongoDB cluster and store it in the db variable. This will be the database you work with in your application.
+
+3.MySQL Connection: You are connecting to a MySQL database using the mysql.connector library. Here's what each parameter in the sql.connect() function does:
+host: Specifies the host where the MySQL database is running. In this case, it's set to "localhost," meaning the database is running on your local machine.
+user: The username used to connect to the MySQL database.
+password: The password for the specified MySQL user.
+database: The name of the MySQL database you want to connect to, which is "youtube_db" in this case.
+mydb: This variable holds the MySQL database connection.
+mycursor: You create a cursor object, which you can use to execute SQL queries and fetch results.
+
+4.YouTube Data API Connection:
+The build() function from the googleapiclient.discovery module to create a connection to the YouTube Data API. Here's what each parameter does:
+api_key: You provide your YouTube Data API key to authenticate and access the API.
+"youtube": This specifies the API you want to access.
+"v3": The version of the YouTube Data API you want to use.
+youtube: This variable holds the connection to the YouTube Data API, which you can use to make requests and retrieve data from YouTube.
+
+With these connections established, you can interact with MongoDB Atlas, MySQL, and the YouTube Data API within your application to store and retrieve data as needed.
+
+
+
+
+
+
+
